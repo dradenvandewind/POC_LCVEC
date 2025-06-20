@@ -93,9 +93,20 @@ RUN git clone https://gitlab.freedesktop.org/gstreamer/gstreamer.git && \
     ninja && \
     ninja install && \
     ldconfig 
+#raw souce https://media.xiph.org/video/derf/
+RUN wget https://media.xiph.org/video/derf/y4m/akiyo_cif.y4m 
 
+#add lcvec encoder
+RUN git clone https://github.com/mpeg5/xeve && \
+cd xeve && \
+mkdir build && \
+cd build && \
+cmake .. && \
+make && \
+make install && \
+ldconfig
 
-
+#xeve_app -i akiyo_cif.y4m -w 352 -h 288 -z 30 -o xeve.evc
 
 
 
