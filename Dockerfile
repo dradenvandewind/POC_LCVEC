@@ -96,9 +96,13 @@ RUN git clone https://gitlab.freedesktop.org/gstreamer/gstreamer.git && \
 #raw souce https://media.xiph.org/video/derf/
 RUN wget https://media.xiph.org/video/derf/y4m/akiyo_cif.y4m 
 
+COPY display_conf.patch /root/workingsrc/display_conf.patch
+COPY add-logs.patch /root/workingsrc/add-logs.patch
 #add lcvec encoder
 RUN git clone https://github.com/mpeg5/xeve && \
 cd xeve && \
+git apply < /root/workingsrc/display_conf.patch && \
+git apply < /root/workingsrc/add-logs.patch && \
 mkdir build && \
 cd build && \
 cmake .. && \
@@ -107,6 +111,19 @@ make install && \
 ldconfig
 
 #xeve_app -i akiyo_cif.y4m -w 352 -h 288 -z 30 -o xeve.evc
+ENV PKG_CONFIG_PATH=/usr/lib/pkgconfig:$PKG_CONFIG_PATH
+COPY ./gstevcplugin/ /root/workingsrc/gstevcplugin/
+COPY *.sh /root/workingsrc/
+
+#cp /usr/local/include/xeve/xeve.h /usr/local/include/xeve.h && \
+
+RUN cd /root/workingsrc/gstevcplugin && \
+cp /usr/local/include/xeve/xeve.h /usr/local/include/xeve.h && \
+cp xeve.pc /usr/lib/pkgconfig && \
+meson builddir --prefix=/usr && \
+ninja -C builddir && \
+ninja -C builddir install && \
+ldconfig
 
 
 

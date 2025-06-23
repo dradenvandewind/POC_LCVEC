@@ -1,0 +1,101 @@
+From 190646fac69e86f17b66c162776316169bb0bac9 Mon Sep 17 00:00:00 2001
+From: le blond <erwanleblond@gmail.com>
+Date: Mon, 23 Jun 2025 13:55:12 +0200
+Subject: [PATCH]  add some logs
+
+---
+ src_base/xeve.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/src_base/xeve.c b/src_base/xeve.c
+index eea3e0a..9afc9a4 100644
+--- a/src_base/xeve.c
++++ b/src_base/xeve.c
+@@ -31,11 +31,17 @@
+ #include <math.h>
+ #include "xeve_type.h"
+ #include "xeve_param_parse.h"
++#include <string.h>
++
++#include <stdio.h>
++
++
+ 
+ XEVE xeve_create(XEVE_CDSC * cdsc, int * err)
+ {
+     XEVE_CTX  * ctx;
+     int          ret;
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
+ 
+ #if ENC_DEC_TRACE
+ #if TRACE_DBF
+@@ -48,24 +54,43 @@ XEVE xeve_create(XEVE_CDSC * cdsc, int * err)
+ #endif
+ #endif
+     ctx = NULL;
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
+ 
+     /* memory allocation for ctx and core structure */
+     ctx = (XEVE_CTX*)xeve_ctx_alloc();
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
+ 
+     /* set default value for encoding parameter */
+     xeve_mcpy(&ctx->param, &(cdsc->param), sizeof(XEVE_PARAM));
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
++
++
+     ret = xeve_set_init_param(ctx, &ctx->param);
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
++
+     xeve_assert_g(ret == XEVE_OK, ERR);
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
++
+     xeve_assert_g(ctx->param.profile == XEVE_PROFILE_BASELINE, ERR);
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
+ 
+     ret = xeve_platform_init(ctx);
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
++
+     xeve_assert_g(ret == XEVE_OK, ERR);
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
+ 
+     ret = xeve_create_bs_buf(ctx, cdsc->max_bs_buf_size);
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
++
+     xeve_assert_g(ret == XEVE_OK, ERR);
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
+ 
+     xeve_init_err_scale(ctx);
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
++
+     xeve_set_chroma_qp_tbl_loc(ctx);
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
+ 
+     if(ctx->fn_ready != NULL)
+     {
+@@ -74,14 +99,22 @@ XEVE xeve_create(XEVE_CDSC * cdsc, int * err)
+     }
+ 
+     /* set default value for ctx */
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
++
+     ctx->magic = XEVE_MAGIC_CODE;
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
++
+     ctx->id = (XEVE)ctx;
++    printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
++
+     ctx->sh->aps_signaled = -1;
+ 
+     return (ctx->id);
+ ERR:
+     if(ctx)
+     {
++        printf("File: %s | Function: %s | Line: %d\n", __FILE__, __func__, __LINE__);
++
+         xeve_platform_deinit(ctx);
+         xeve_delete_bs_buf(ctx);
+         xeve_ctx_free(ctx);
+-- 
+2.34.1
+
