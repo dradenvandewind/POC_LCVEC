@@ -125,6 +125,16 @@ ninja -C builddir && \
 ninja -C builddir install && \
 ldconfig
 
+RUN git clone https://github.com/mpeg5/xevd.git && \
+cd xevd && \
+mkdir build && \
+cd build && \
+cmake .. && \
+make && \
+make install && \
+ldconfig
+#xevd_app -i akyio.evc -o akyio_lcvev.yuv
+#
 
 
 ARG USER_ID=1000
